@@ -1,3 +1,11 @@
+/* Bootstrap overrides */
+
+/* .form-control {
+  border: none;
+} */
+
+/* Bootstrap overrides */
+
 .food-picture {
   width: auto;
   height: 60px;
@@ -19,5 +27,11 @@
 }
 
 .quantity-input {
-  width: 3rem;
+  border: none;
+  height: 100%;
+}
+
+.quantity-input-container {
+  width: 30%;
+  height: 5rem;
 }

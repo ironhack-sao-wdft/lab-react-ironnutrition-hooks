@@ -35,7 +35,7 @@ function App() {
   }
 
   return (
-    <div className="container-fluid mt-4">
+    <div className="container mt-5">
       <Search foodList={foodList} handleSearch={filterFoods} />
       <div className="row">
         <div className="col-6">
