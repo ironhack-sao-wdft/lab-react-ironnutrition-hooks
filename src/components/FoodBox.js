@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 function Foodbox(props) {
+  // Gerenciando a quantidade de cada comida que o usuário selecionar
   const [quantity, setQuantity] = useState(props.quantity);
 
   function handleChange(event) {
@@ -30,6 +31,7 @@ function Foodbox(props) {
           className="form-control form-control-lg quantity-input"
           aria-label="Recipient's username"
           aria-describedby="button-addon2"
+          // Esse é nosso state interno do componente
           value={quantity}
           onChange={handleChange}
         />
@@ -38,7 +40,9 @@ function Foodbox(props) {
             className="btn btn-primary btn-lg w-100"
             type="button"
             id="button-addon2"
+            // A funçāo addFood esta sendo passada como prop do component App
             onClick={() => {
+              // Atualiza a quantidade dessa comida no state do App através do state interno
               return props.addFood({ ...props, quantity: quantity });
             }}
           >

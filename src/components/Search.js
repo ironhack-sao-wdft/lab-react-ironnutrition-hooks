@@ -12,6 +12,7 @@ function Search(props) {
         type="text"
         className="form-control form-control-lg"
         placeholder="Search for a food!"
+        // Toda vez que o usuário tirar o dedo de uma tecla do teclado, execute a funçāo handleSearch
         onKeyUp={(event) => props.handleSearch(event.currentTarget.value)}
       />
     </div>

@@ -4,6 +4,7 @@ import FoodBox from './FoodBox';
 function FoodList(props) {
   return (
     <div>
+      {/* Recebe o state do componente pai e pra cada objeto da lista, renderiza um Foodbox */}
       {props.foodList.map((food, i) => {
         return (
           <FoodBox
