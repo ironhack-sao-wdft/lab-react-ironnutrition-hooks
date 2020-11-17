@@ -1,68 +1,80 @@
-import React, { useState } from 'react';
-import './App.css';
-import foods from '../foods.json';
+import React, { useState, useEffect } from 'react';
+import 'bulma/css/bulma.css';
 
-import FoodList from './FoodList';
-import CalorieTracker from './CalorieTracker';
+import './App.css';
+import foodsSrc from '../foods.json';
+
+import FoodBox from './FoodBox';
+import NewFood from './NewFood';
 import Search from './Search';
+import ConsumedFoods from './ConsumedFoods';
 
 function App() {
-  // Lista de comidas, atualizada a partir do arquivo foods.json
-  // Array destructuring
-  const [foodList, setFoodList] = useState(foods);
+  const [foods, setFoods] = useState([...foodsSrc]);
+  const [foodsBkp, setFoodsBkp] = useState([...foodsSrc]);
 
-  // CalorieTracker state
-  // Esse state está sendo usado para exibir o total de calorias do dia
-  const [todaysCalories, setTodaysCalories] = useState(0);
+  const [toggleForm, setToggleForm] = useState(false);
 
-  // Esse state está sendo usado para guardar as comidas adicionadas até agora
   const [todaysFoods, setTodaysFoods] = useState([]);
 
-  function filterFoods(term) {
-    // Se a caixa de pesquisa estiver vazia, atualize a lista de comidas para todas as comidas novamente
-    if (!term) {
-      return setFoodList([...foods]);
-    }
+  // useEffect(() => {
+  //   console.log('App is mounted!');
+  // }, []);
 
-    // Verifica se cada objeto da lista de comidas inclui em seu nome o termo de pesquisa
-    const filtered = foodList.filter((food) => {
+  function filterFoods(term) {
+    // Filtrar a array 'foods' para que ela seja atualizada para uma array contendo apenas os objetos que contiverem o termo pesquisado na chave 'name'
+
+    const foodsCopy = [...foods];
+
+    const filteredArr = foodsCopy.filter((food) => {
       return food.name.toLowerCase().includes(term.toLowerCase());
     });
 
-    // Como resetar a pesquisa em cada backspace do usuario
-    // Ao inves de filtrar o state da lista de comidas, filtramos a array original
-    // const filtered = foods.filter((food) => {
-    //   return food.name.toLowerCase().includes(term.toLowerCase());
-    // });
-
-    return setFoodList([...filtered]);
+    setFoodsBkp(filteredArr);
   }
 
-  // Essa funçāo é executada pelo component FoodBox quando o usuario clica no botāo "+". O parametro food é a comida atual do FoodBox
-  function addFood(food) {
-    // Adiciona a comida do FoodBox atual para a lista de comidas consumidas hoje
-    const updatedFoods = [...todaysFoods, food];
+  function addTodayFood(food) {
+    const foodsCopy = [...todaysFoods];
 
-    // Roda a atualizaçāo do DOM
-    setTodaysFoods([...updatedFoods]);
-    // Calcula o incremento das calorias de hoje e roda a atualizaçāo do DOM
-    return setTodaysCalories(
-      (prevState) => prevState + food.calories * food.quantity
-    );
+    foodsCopy.push(food);
+
+    setTodaysFoods([...foodsCopy]);
   }
 
   return (
-    <div className="container mt-5">
-      {/* Caixa de pesquisa */}
-      <Search foodList={foodList} handleSearch={filterFoods} />
-      <div className="row">
-        <div className="col-6">
-          {/* Lista de comidas para o usuario selecionar */}
-          <FoodList foodList={foodList} addFood={addFood} />
+    <div className="container">
+      <h1 className="title is-1">IronNutrition</h1>
+      <Search filterFoods={filterFoods} />
+      <div className="columns">
+        <div className="column is-three-quarters">
+          {foodsBkp.map((food, i) => (
+            <FoodBox
+              key={i}
+              image={food.image}
+              name={food.name}
+              calories={food.calories}
+              addTodayFood={addTodayFood}
+            />
+          ))}
         </div>
-        <div className="col-6">
-          {/* Comidas consumidas hoje e total de calorias do dia */}
-          <CalorieTracker foods={todaysFoods} calories={todaysCalories} />
+        <div className="column">
+          <ConsumedFoods todaysFoods={todaysFoods} />
+
+          {toggleForm ? (
+            <NewFood
+              foods={foods}
+              setFoods={setFoods}
+              setFoodsBkp={setFoodsBkp}
+              setToggleForm={setToggleForm}
+            />
+          ) : (
+            <button
+              onClick={() => setToggleForm(!toggleForm)}
+              className="button is-primary"
+            >
+              New Food
+            </button>
+          )}
         </div>
       </div>
     </div>

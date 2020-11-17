@@ -1,57 +1,61 @@
 import React, { useState } from 'react';
 
-function Foodbox(props) {
-  // Gerenciando a quantidade de cada comida que o usuário selecionar
-  const [quantity, setQuantity] = useState(props.quantity);
+function FoodBox(props) {
+  const [quantity, setQuantity] = useState(0);
 
   function handleChange(event) {
     setQuantity(event.currentTarget.value);
   }
 
   return (
-    <div className="food-box shadow">
-      <div className="d-flex justify-content-start m-2">
-        <div className="picture-container">
-          <img
-            className="food-picture"
-            src={props.image}
-            alt={`A ${props.name}`}
-          />
+    <div className="box">
+      <article className="media">
+        <div className="media-left">
+          <figure className="image is-64x64">
+            <img src={props.image} alt="A food" />
+          </figure>
         </div>
+        <div className="media-content">
+          <div className="content">
+            <p>
+              <strong>{props.name}</strong> <br />
+              <small>{props.calories} cal</small>
+            </p>
+          </div>
+        </div>
+        <div className="media-right">
+          <div className="field has-addons">
+            <div className="control">
+              <input
+                className="input"
+                type="number"
+                value={quantity}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="control">
+              <button
+                onClick={(event) => {
+                  const { name, calories } = props;
 
-        <div className="">
-          <strong>{props.name}</strong>
-          <span className="d-block">{props.calories} cal</span>
+                  if (quantity > 0) {
+                    props.addTodayFood({
+                      name: name,
+                      calories: calories,
+                      quantity: quantity,
+                    });
+                  }
+                }}
+                className="button is-info"
+              >
+                +
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
-
-      <div className="input-group quantity-input-container">
-        <input
-          type="number"
-          className="form-control form-control-lg quantity-input"
-          aria-label="Recipient's username"
-          aria-describedby="button-addon2"
-          // Esse é nosso state interno do componente
-          value={quantity}
-          onChange={handleChange}
-        />
-        <div className="input-group-append w-50">
-          <button
-            className="btn btn-primary btn-lg w-100"
-            type="button"
-            id="button-addon2"
-            // A funçāo addFood esta sendo passada como prop do component App
-            onClick={() => {
-              // Atualiza a quantidade dessa comida no state do App através do state interno
-              return props.addFood({ ...props, quantity: quantity });
-            }}
-          >
-            +
-          </button>
-        </div>
-      </div>
+      </article>
     </div>
   );
 }
 
-export default Foodbox;
+export default FoodBox;
